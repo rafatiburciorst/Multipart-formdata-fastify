@@ -1,6 +1,6 @@
 import fastify from "fastify"
 import { pipeline } from 'node:stream/promises'
-import { createWriteStream } from 'node:fs'
+import { createWriteStream, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import fastifyMultpart from '@fastify/multipart'
 import fastifyCors from '@fastify/cors'
@@ -25,6 +25,7 @@ app.post('/form', async (request, reply) => {
     let data
 
     for await (const part of parts) {
+        mkdirSync(join(__dirname, '..', 'upload'), { recursive: true })
         if (part.type === 'file') {
             await pipeline(
                 part.file,
